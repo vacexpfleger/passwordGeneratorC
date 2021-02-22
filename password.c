@@ -1,3 +1,5 @@
+/*Program na generovani hesla - Fisher-Yates metoda*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -5,29 +7,26 @@
 
 void createPassword() {
     char password[LENGTH];
-    char nums[] = "0123456789";
-    char letters[] = "abcdefghijklmnopqrstuvwxyz";
-    char caps[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    int selector = rand() % 3; //nahodny vyber skupiny znaku
+    int total = 62;
+    char symbols[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     int i;
+    int ar[total];
+    
+    for(i = 0; i < total; i++){
+        ar[i] = i;
+    }
+
+    for (i = total-1; i >= 1; i--){
+        int temp = rand() % (i+1);
+        int temp2 = ar[i];
+        ar[i] = ar[temp];
+        ar[temp] = temp2;
+    }
     
     printf("Vytvorene heslo: ");
     for(i = 0;i < LENGTH;i++) {
-        if(selector == 1) { //pokud je selector = 1, pridej do hesla cislo
-            password[i] = nums[rand() % 10];
-            printf("%c", password[i]);
-            selector = rand() % 3;
-        }
-        else if(selector == 2) { //pokud je selector = 2, pridej do hesla male pismeno
-            password[i] = letters[rand() % 26];
-            printf("%c", password[i]);
-            selector = rand() % 3;
-        }
-        else { //pokud je selector = 3, pridej do hesla velke pismeno
-            password[i] = caps[rand() % 26];
-            printf("%c", password[i]);
-            selector = rand() % 3;
-        }
+        password[i] = symbols[ar[i]];
+        printf("%c", password[i]);
     }
 }
 
@@ -43,7 +42,7 @@ int repeat() {
 }
 
 int main() {
-    srand(time(NULL));
+    srand(time(0));
     printf("Povolene znaky: 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\n");
     do {
         createPassword();
